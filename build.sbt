@@ -19,7 +19,7 @@ name := "aqua-hll"
 val commons = Seq(
   version := {
     val aquaSnapshot = sys.env.getOrElse("SNAPSHOT", "")
-    if (aquaSnapshot.isEmpty()) aquaVersion else aquaVersion + "-" + aquaSnapshot,
+    if (aquaSnapshot.isEmpty()) aquaVersion else aquaVersion + "-" + aquaSnapshot
   },
   scalaVersion := dottyVersion,
   libraryDependencies ++= Seq(
@@ -250,6 +250,11 @@ lazy val compiler = crossProject(JVMPlatform, JSPlatform)
   .in(file("compiler"))
   .settings(commons: _*)
   .dependsOn(semantics, linker, backend, transform % Test)
+
+lazy val `compiler-native-lib` = project
+  .in(file("compiler-native-lib"))
+  .settings(commons: _*)
+  .dependsOn(compiler.jvm, io.jvm, transform.jvm, `backend-air`.jvm)
 
 lazy val backend = crossProject(JVMPlatform, JSPlatform)
   .withoutSuffixFor(JVMPlatform)
